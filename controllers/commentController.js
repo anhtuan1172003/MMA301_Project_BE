@@ -1,5 +1,6 @@
 const Comment = require('../models/Comment');
 
+// Lấy tất cả bình luận
 exports.getComments = async (req, res) => {
   try {
     const comments = await Comment.find();
@@ -9,9 +10,10 @@ exports.getComments = async (req, res) => {
   }
 };
 
+// Lấy bình luận bằng _id
 exports.getCommentById = async (req, res) => {
   try {
-    const comment = await Comment.findOne({ _id: req.params.id });
+    const comment = await Comment.findById(req.params.id);
     if (!comment) return res.status(404).json({ message: 'Comment not found' });
     res.json(comment);
   } catch (err) {
@@ -19,6 +21,7 @@ exports.getCommentById = async (req, res) => {
   }
 };
 
+// Tạo bình luận mới
 exports.createComment = async (req, res) => {
   const comment = new Comment(req.body);
   try {
@@ -29,9 +32,10 @@ exports.createComment = async (req, res) => {
   }
 };
 
+// Cập nhật bình luận bằng _id
 exports.updateComment = async (req, res) => {
   try {
-    const comment = await Comment.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true });
+    const comment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!comment) return res.status(404).json({ message: 'Comment not found' });
     res.json(comment);
   } catch (err) {
@@ -39,9 +43,10 @@ exports.updateComment = async (req, res) => {
   }
 };
 
+// Xóa bình luận bằng _id
 exports.deleteComment = async (req, res) => {
   try {
-    const comment = await Comment.findOneAndDelete({ _id: req.params.id });
+    const comment = await Comment.findByIdAndDelete(req.params.id);
     if (!comment) return res.status(404).json({ message: 'Comment not found' });
     res.json({ message: 'Comment deleted' });
   } catch (err) {

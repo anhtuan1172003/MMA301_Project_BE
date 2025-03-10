@@ -1,5 +1,6 @@
 const Album = require('../models/Album');
 
+// Lấy tất cả album
 exports.getAlbums = async (req, res) => {
   try {
     const albums = await Album.find();
@@ -9,9 +10,10 @@ exports.getAlbums = async (req, res) => {
   }
 };
 
+// Lấy album bằng _id
 exports.getAlbumById = async (req, res) => {
   try {
-    const album = await Album.findOne({ albumId: req.params.id });
+    const album = await Album.findById(req.params.id);
     if (!album) return res.status(404).json({ message: 'Album not found' });
     res.json(album);
   } catch (err) {
@@ -19,6 +21,7 @@ exports.getAlbumById = async (req, res) => {
   }
 };
 
+// Tạo album mới
 exports.createAlbum = async (req, res) => {
   const album = new Album(req.body);
   try {
@@ -29,9 +32,10 @@ exports.createAlbum = async (req, res) => {
   }
 };
 
+// Cập nhật album bằng _id
 exports.updateAlbum = async (req, res) => {
   try {
-    const album = await Album.findOneAndUpdate({ albumId: req.params.id }, req.body, { new: true });
+    const album = await Album.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!album) return res.status(404).json({ message: 'Album not found' });
     res.json(album);
   } catch (err) {
@@ -39,9 +43,10 @@ exports.updateAlbum = async (req, res) => {
   }
 };
 
+// Xóa album bằng _id
 exports.deleteAlbum = async (req, res) => {
   try {
-    const album = await Album.findOneAndDelete({ albumId: req.params.id });
+    const album = await Album.findByIdAndDelete(req.params.id);
     if (!album) return res.status(404).json({ message: 'Album not found' });
     res.json({ message: 'Album deleted' });
   } catch (err) {

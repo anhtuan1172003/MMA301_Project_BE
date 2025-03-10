@@ -1,5 +1,6 @@
 const Favorite = require('../models/Favorite');
 
+// Lấy tất cả yêu thích
 exports.getFavorites = async (req, res) => {
   try {
     const favorites = await Favorite.find();
@@ -9,9 +10,10 @@ exports.getFavorites = async (req, res) => {
   }
 };
 
+// Lấy yêu thích bằng _id
 exports.getFavoriteById = async (req, res) => {
   try {
-    const favorite = await Favorite.findOne({ _id: req.params.id });
+    const favorite = await Favorite.findById(req.params.id);
     if (!favorite) return res.status(404).json({ message: 'Favorite not found' });
     res.json(favorite);
   } catch (err) {
@@ -19,6 +21,7 @@ exports.getFavoriteById = async (req, res) => {
   }
 };
 
+// Tạo yêu thích mới
 exports.createFavorite = async (req, res) => {
   const favorite = new Favorite(req.body);
   try {
@@ -29,9 +32,10 @@ exports.createFavorite = async (req, res) => {
   }
 };
 
+// Xóa yêu thích bằng _id
 exports.deleteFavorite = async (req, res) => {
   try {
-    const favorite = await Favorite.findOneAndDelete({ _id: req.params.id });
+    const favorite = await Favorite.findByIdAndDelete(req.params.id);
     if (!favorite) return res.status(404).json({ message: 'Favorite not found' });
     res.json({ message: 'Favorite deleted' });
   } catch (err) {
