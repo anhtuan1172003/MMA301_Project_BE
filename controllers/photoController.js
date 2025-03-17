@@ -72,13 +72,13 @@ exports.createPhoto = async (req, res) => {
     if (!title || !user || !req.body.image?.url) {
       return res.status(400).json({
         success: false,
-        error: 'Vui lòng cung cấp đầy đủ tiêu đề, người dùng và hình ảnh'
+        error: 'Vui lòng cấp quyền truy cập và cung cấp đầy đủ thông tin'
       });
     }
 
     const photo = await Photo.create({
       title,
-      user: user,
+      userId: user,
       image: {
         url: [req.body.image.url], // Wrap in array to match schema
         thumbnail: req.body.image.thumbnail || req.body.image.url
