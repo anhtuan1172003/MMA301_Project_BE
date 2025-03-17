@@ -1,8 +1,8 @@
-const User = require("../models/user")
-const Album = require("../models/album")
-const Photo = require("../models/photo")
-const Comment = require("../models/comment")
-const Favorite = require("../models/favorite")
+const User = require("../models/User")
+const Album = require("../models/Album")
+const Photo = require("../models/Photo")
+const Comment = require("../models/Comment")
+const Favorite = require("../models/Favorite")
 
 // Sample data from the provided JSON
 const sampleData = {
