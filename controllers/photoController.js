@@ -10,6 +10,9 @@ exports.getPhotos = async (req, res) => {
 
     // Build query
     const query = {}
+    if (req.query.user) {
+      query.user = req.query.user
+    }
     if (req.query.albumId) {
       query.albumId = req.query.albumId
     }
