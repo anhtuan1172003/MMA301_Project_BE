@@ -14,6 +14,7 @@ const {
 
 // Routes for /api/photos
 router.route("/").get(getPhotos).post(createPhoto)
+router.route("/user/:userId").get(getPhotosByUserId)
 
 // Routes for /api/photos/:id
 router.route("/:id").get(getPhoto).put(updatePhoto).delete(deletePhoto)

@@ -4,43 +4,40 @@ const Favorite = require("../models/Favorite")
 // Get all photos
 exports.getPhotos = async (req, res) => {
   try {
-    const page = Number.parseInt(req.query.page) || 1
-    const limit = Number.parseInt(req.query.limit) || 10
-    const skip = (page - 1) * limit
+    const photos = await Photo.find({});
+    res.status(200).json(photos);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-    // Build query
-    const query = {}
-    if (req.query.user) {
-      query.user = req.query.user
-    }
-    if (req.query.albumId) {
-      query.albumId = req.query.albumId
-    }
-    if (req.query.tag) {
-      query.tags = req.query.tag
+// Get photos by user ID
+exports.getPhotosByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
     }
 
-    const photos = await Photo.find(query).skip(skip).limit(limit).populate("albumId")
-
-    const total = await Photo.countDocuments(query)
+    const photos = await Photo.find({ user: userId });
+    
+    if (photos.length === 0) {
+      return res.status(404).json({ message: 'No photos found for this user' });
+    }
 
     res.status(200).json({
-      success: true,
       count: photos.length,
-      pagination: {
-        total,
-        page,
-        pages: Math.ceil(total / limit),
-      },
-      data: photos,
-    })
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: "Server Error",
-    })
+      data: photos
+    });
+
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Server Error', 
+      error: error.message 
+    });
   }
-}
+};
 
 // Get single photo
 exports.getPhoto = async (req, res) => {
