@@ -66,27 +66,50 @@ exports.getPhoto = async (req, res) => {
 // Create new photo
 exports.createPhoto = async (req, res) => {
   try {
-    const photo = await Photo.create(req.body)
+    console.log('Incoming photo creation request body:', JSON.stringify(req.body, null, 2));
+    const { title, user } = req.body;
+
+    if (!title || !user || !req.body.image?.url) {
+      return res.status(400).json({
+        success: false,
+        error: 'Vui lòng cung cấp đầy đủ tiêu đề, người dùng và hình ảnh'
+      });
+    }
+
+    const photo = await Photo.create({
+      title,
+      user: user,
+      image: {
+        url: [req.body.image.url], // Wrap in array to match schema
+        thumbnail: req.body.image.thumbnail || req.body.image.url
+      },
+      createdAt: new Date()
+    });
 
     res.status(201).json({
       success: true,
-      data: photo,
-    })
+      data: photo
+    });
+
   } catch (err) {
-    if (err.name === "ValidationError") {
-      const messages = Object.values(err.errors).map((val) => val.message)
-      return res.status(400).json({
-        success: false,
-        error: messages,
-      })
-    } else {
-      return res.status(500).json({
-        success: false,
-        error: "Server Error",
-      })
-    }
+    console.error('Photo creation error:', {
+      error: err.message,
+      stack: err.stack,
+      requestBody: req.body,
+      validationErrors: err.errors || null,
+      fullError: JSON.stringify(err, Object.getOwnPropertyNames(err))
+    });
+    
+    const errorMessage = err.name === 'ValidationError' 
+      ? `Dữ liệu không hợp lệ: ${err.message.replace('Path `image.url`', 'URL ảnh').replace('is required', 'là bắt buộc')}`
+      : `Lỗi server: ${err.message}`;
+
+    res.status(500).json({
+      success: false,
+      error: errorMessage
+    });
   }
-}
+};
 
 // Update photo
 exports.updatePhoto = async (req, res) => {

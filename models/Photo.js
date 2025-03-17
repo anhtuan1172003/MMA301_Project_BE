@@ -4,16 +4,16 @@ const photoSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: false,
     },
     image: {
       url: {
         type: [String],
-        required: true,
+        required: false,
       },
       thumbnail: {
         type: String,
-        required: true,
+        required: false,
       },
     },
     albumId: {
