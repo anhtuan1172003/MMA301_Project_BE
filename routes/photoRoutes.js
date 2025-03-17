@@ -10,6 +10,7 @@ const {
   unlikePhoto,
   checkFavorite,
   getLikes,
+  getPhotosByUserId
 } = require("../controllers/photoController")
 
 // Routes for /api/photos
