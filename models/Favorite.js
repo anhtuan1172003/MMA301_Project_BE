@@ -1,20 +1,8 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose');
 
-const favoriteSchema = new mongoose.Schema(
-  {
-    photoId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "Photo",
-    },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
-  },
-  { timestamps: true },
-)
+const favoriteSchema = new mongoose.Schema({
+  photoId: { type: Number, required: true },
+  userId: { type: Number, required: true }
+});
 
-module.exports = mongoose.model("Favorite", favoriteSchema)
-
+module.exports = mongoose.model('Favorite', favoriteSchema);
