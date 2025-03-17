@@ -1,4 +1,4 @@
-const Favorite = require("../models/favorite")
+const Favorite = require("../models/Favorite")
 
 // Get all favorites
 exports.getFavorites = async (req, res) => {

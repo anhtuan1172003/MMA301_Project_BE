@@ -1,5 +1,5 @@
-const Photo = require("../models/photo")
-const Favorite = require("../models/favorite")
+const Photo = require("../models/Photo")
+const Favorite = require("../models/Favorite")
 
 // Get all photos
 exports.getPhotos = async (req, res) => {

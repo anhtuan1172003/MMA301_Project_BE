@@ -8,7 +8,7 @@ const albumRoutes = require('./routes/albumRoutes');
 const photoRoutes = require('./routes/photoRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
-const seedRoutes = require('./routes/seedRoutes')
+
 
 const app = express();
 
@@ -25,7 +25,5 @@ app.use('/albums', albumRoutes);
 app.use('/photos', photoRoutes);
 app.use('/comments', commentRoutes);
 app.use('/favorites', favoriteRoutes);
-// Removed separate favorites route since it's now part of photos
 
-app.use("/seed", seedRoutes)
 module.exports = app;
