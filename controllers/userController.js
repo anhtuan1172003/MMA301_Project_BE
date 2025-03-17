@@ -137,11 +137,62 @@ const deleteUser = async (req, res) => {
   }
 }
 
+// Login user
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: "Vui lòng cung cấp email và mật khẩu",
+      });
+    }
+
+    // Tìm người dùng theo email
+    const user = await User.findOne({ "account.email": email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: "Email không tồn tại",
+      });
+    }
+
+    // Kiểm tra trạng thái kích hoạt
+    if (!user.account.isActive) {
+      return res.status(401).json({
+        success: false,
+        error: "Tài khoản chưa kích hoạt! Kiểm tra email để kích hoạt.",
+      });
+    }
+
+    // Kiểm tra mật khẩu
+    if (user.account.password !== password) {
+      return res.status(401).json({
+        success: false,
+        error: "Mật khẩu không đúng",
+      });
+    }
+
+    // Trả về thông tin người dùng (trong thực tế nên trả về JWT token)
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: "Server Error",
+    });
+  }
+};
 
 module.exports={
   getUser,
   getUsers,
   createUser,
   deleteUser,
-  updateUser
+  updateUser,
+  loginUser
 }
