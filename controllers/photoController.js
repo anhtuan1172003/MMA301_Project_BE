@@ -17,7 +17,7 @@ exports.getPhotos = async (req, res) => {
       query.tags = req.query.tag
     }
 
-    const photos = await Photo.find(query).skip(skip).limit(limit).populate("albumId")
+    const photos = await Photo.find(query).skip(skip).limit(limit).populate("userId").populate("albumId")
 
     const total = await Photo.countDocuments(query)
 
