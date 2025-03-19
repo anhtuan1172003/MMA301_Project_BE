@@ -82,12 +82,29 @@ exports.createPhoto = async (req, res) => {
       });
     }
 
+    // Handle different formats of image URLs
+    let imageUrls;
+    if (Array.isArray(req.body.image.url)) {
+      // If it's already an array, use it directly
+      imageUrls = req.body.image.url;
+    } else if (typeof req.body.image.url === 'string') {
+      // If it's a string, check if it's comma-separated
+      if (req.body.image.url.includes(',')) {
+        imageUrls = req.body.image.url.split(',');
+      } else {
+        // Single URL string
+        imageUrls = [req.body.image.url];
+      }
+    } else {
+      imageUrls = [];
+    }
+
     const photo = await Photo.create({
       title,
       userId: userId,
       image: {
-        url: [req.body.image.url], // Wrap in array to match schema
-        thumbnail: req.body.image.thumbnail || req.body.image.url
+        url: imageUrls, // Use the processed array
+        thumbnail: req.body.image.thumbnail || (imageUrls.length > 0 ? imageUrls[0] : '')
       },
       createdAt: new Date()
     });
