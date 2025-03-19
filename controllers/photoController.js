@@ -82,28 +82,39 @@ exports.createPhoto = async (req, res) => {
       });
     }
 
-    // Handle different formats of image URLs
-    let imageUrls;
+    // Process the image URLs properly
+    let imageUrls = [];
+    
     if (Array.isArray(req.body.image.url)) {
-      // If it's already an array, use it directly
+      // If client sends an array, use it directly
       imageUrls = req.body.image.url;
     } else if (typeof req.body.image.url === 'string') {
-      // If it's a string, check if it's comma-separated
-      if (req.body.image.url.includes(',')) {
-        imageUrls = req.body.image.url.split(',');
-      } else {
-        // Single URL string
-        imageUrls = [req.body.image.url];
+      // If client sends a string, try to parse it
+      try {
+        // Check if it's a JSON string representation of an array
+        const parsedUrls = JSON.parse(req.body.image.url);
+        if (Array.isArray(parsedUrls)) {
+          imageUrls = parsedUrls;
+        } else {
+          // If it's not an array after parsing, use as single item
+          imageUrls = [req.body.image.url];
+        }
+      } catch (e) {
+        // If it's not valid JSON, check if it's comma-separated
+        if (req.body.image.url.includes(',')) {
+          imageUrls = req.body.image.url.split(',');
+        } else {
+          // Otherwise, use as a single item
+          imageUrls = [req.body.image.url];
+        }
       }
-    } else {
-      imageUrls = [];
     }
 
     const photo = await Photo.create({
       title,
       userId: userId,
       image: {
-        url: imageUrls, // Use the processed array
+        url: imageUrls, // Use the properly processed array
         thumbnail: req.body.image.thumbnail || (imageUrls.length > 0 ? imageUrls[0] : '')
       },
       createdAt: new Date()
