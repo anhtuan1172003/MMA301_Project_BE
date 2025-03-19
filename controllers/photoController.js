@@ -4,10 +4,6 @@ const Favorite = require("../models/Favorite")
 // Get all photos 
 exports.getPhotos = async (req, res) => {
   try {
-    const page = Number.parseInt(req.query.page) || 1;
-    const limit = Number.parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
     const query = {};
     if (req.query.albumId) {
       query.albumId = req.query.albumId;
@@ -20,22 +16,14 @@ exports.getPhotos = async (req, res) => {
     }
 
     const photos = await Photo.find(query)
-      .skip(skip)
-      .limit(limit)
       .populate("userId")
-      .populate("albumId")
-      .lean(); // Sử dụng lean() để trả về plain JavaScript objects thay vì Mongoose Documents
+      .populate("albumId");
 
     const total = await Photo.countDocuments(query);
 
     res.status(200).json({
       success: true,
       count: photos.length,
-      pagination: {
-        total,
-        page,
-        pages: Math.ceil(total / limit),
-      },
       data: photos,
     });
   } catch (err) {
