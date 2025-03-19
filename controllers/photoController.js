@@ -1,25 +1,31 @@
 const Photo = require("../models/Photo")
 const Favorite = require("../models/Favorite")
 
-// Get all photos
+// Get all photos 
 exports.getPhotos = async (req, res) => {
   try {
-    const page = Number.parseInt(req.query.page) || 1
-    const limit = Number.parseInt(req.query.limit) || 10
-    const skip = (page - 1) * limit
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-    // Build query
-    const query = {}
+    const query = {};
     if (req.query.albumId) {
-      query.albumId = req.query.albumId
+      query.albumId = req.query.albumId;
     }
     if (req.query.tag) {
-      query.tags = req.query.tag
+      query.tags = req.query.tag;
+    }
+    if (req.query.userId) { 
+      query.userId = req.query.userId;
     }
 
-    const photos = await Photo.find(query).skip(skip).limit(limit).populate("userId").populate("albumId")
+    const photos = await Photo.find(query)
+      .skip(skip)
+      .limit(limit)
+      .populate("userId")
+      .populate("albumId");
 
-    const total = await Photo.countDocuments(query)
+    const total = await Photo.countDocuments(query);
 
     res.status(200).json({
       success: true,
@@ -30,14 +36,14 @@ exports.getPhotos = async (req, res) => {
         pages: Math.ceil(total / limit),
       },
       data: photos,
-    })
+    });
   } catch (err) {
     res.status(500).json({
       success: false,
       error: "Server Error",
-    })
+    });
   }
-}
+};
 
 // Get single photo
 exports.getPhoto = async (req, res) => {
@@ -67,9 +73,9 @@ exports.getPhoto = async (req, res) => {
 exports.createPhoto = async (req, res) => {
   try {
     console.log('Incoming photo creation request body:', JSON.stringify(req.body, null, 2));
-    const { title, user } = req.body;
+    const { title, userId } = req.body;
 
-    if (!title || !user || !req.body.image?.url) {
+    if (!title || !userId || !req.body.image?.url) {
       return res.status(400).json({
         success: false,
         error: 'Vui lòng cấp quyền truy cập và cung cấp đầy đủ thông tin'
@@ -78,7 +84,7 @@ exports.createPhoto = async (req, res) => {
 
     const photo = await Photo.create({
       title,
-      userId: user,
+      userId: userId,
       image: {
         url: [req.body.image.url], // Wrap in array to match schema
         thumbnail: req.body.image.thumbnail || req.body.image.url
