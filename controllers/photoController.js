@@ -23,7 +23,8 @@ exports.getPhotos = async (req, res) => {
       .skip(skip)
       .limit(limit)
       .populate("userId")
-      .populate("albumId");
+      .populate("albumId")
+      .lean(); // Sử dụng lean() để trả về plain JavaScript objects thay vì Mongoose Documents
 
     const total = await Photo.countDocuments(query);
 
