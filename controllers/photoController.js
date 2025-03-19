@@ -117,6 +117,7 @@ exports.createPhoto = async (req, res) => {
         url: imageUrls, // Use the properly processed array
         thumbnail: req.body.image.thumbnail || (imageUrls.length > 0 ? imageUrls[0] : '')
       },
+      location: req.body.location || null,
       createdAt: new Date()
     });
 

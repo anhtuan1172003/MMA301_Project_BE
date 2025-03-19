@@ -21,6 +21,16 @@ const photoSchema = new mongoose.Schema(
         required: false,
       },
     },
+    location: {
+      latitude: {
+        type: String,
+        required: false,
+      },
+      longitude: {
+        type: String,
+        required: false,
+      },
+    },
     albumId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Album",
