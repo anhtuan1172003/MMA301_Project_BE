@@ -5,6 +5,9 @@ const { getFavorites, getFavorite, createFavorite, deleteFavorite } = require(".
 // Routes for /api/favorites
 router.route("/").get(getFavorites).post(createFavorite)
 
+// Route for /api/favorites/count
+router.route("/count").get(getFavoriteCounts)
+
 // Routes for /api/favorites/:id
 router.route("/:id").get(getFavorite).delete(deleteFavorite)
 

@@ -100,6 +100,35 @@ exports.createFavorite = async (req, res) => {
   }
 }
 
+// Get favorite counts by photo
+exports.getFavoriteCounts = async (req, res) => {
+  try {
+    const counts = await Favorite.aggregate([
+      {
+        $group: {
+          _id: "$photoId",
+          count: { $sum: 1 }
+        }
+      }
+    ])
+
+    const result = counts.map(item => ({
+      photoId: item._id,
+      count: item.count
+    }))
+
+    res.status(200).json({
+      success: true,
+      data: result
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: "Server Error"
+    })
+  }
+}
+
 // Delete favorite
 exports.deleteFavorite = async (req, res) => {
   try {
