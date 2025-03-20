@@ -11,6 +11,10 @@ const albumSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    images: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Photo"
+    }],
   },
   { timestamps: true },
 )
