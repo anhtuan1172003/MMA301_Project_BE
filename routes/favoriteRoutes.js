@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const { getFavorites, getFavorite, createFavorite, deleteFavorite } = require("../controllers/favoriteController")
+const { getFavorites, getFavorite, createFavorite, deleteFavorite, getFavoriteCounts } = require("../controllers/favoriteController")
 
 // Routes for /api/favorites
 router.route("/").get(getFavorites).post(createFavorite)
